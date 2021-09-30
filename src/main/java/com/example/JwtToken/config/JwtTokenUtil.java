@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,12 +15,14 @@ import java.util.function.Function;
 
 /** @Author: Santosh Paudel */
 @Component
-public class JwtTokenUtil {
+public class JwtTokenUtil implements Serializable {
+
+  private static final long serialVersionUID = -2550185165626007488L;
+
+  public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
   @Value("${jwt.secret}")
   private String secret;
-
-  private static final long time = 50 * 60 * 60;
 
   // retrieve username from jwt token
   public String getUsernameFromToken(String token) {
@@ -35,8 +38,7 @@ public class JwtTokenUtil {
     final Claims claims = getAllClaimsFromToken(token);
     return claimsResolver.apply(claims);
   }
-
-  // for retrieving any information from token we will need the secret key
+  // for retrieveing any information from token we will need the secret key
   private Claims getAllClaimsFromToken(String token) {
     return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
   }
@@ -60,11 +62,12 @@ public class JwtTokenUtil {
   // Serialization(https://tools.ietf.org/html/draft-ietf-jose-json-web-signature-41#section-3.1)
   //   compaction of the JWT to a URL-safe string
   private String doGenerateToken(Map<String, Object> claims, String subject) {
+
     return Jwts.builder()
         .setClaims(claims)
         .setSubject(subject)
         .setIssuedAt(new Date(System.currentTimeMillis()))
-        .setExpiration(new Date(System.currentTimeMillis() + time * 1000L))
+        .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
         .signWith(SignatureAlgorithm.HS512, secret)
         .compact();
   }
