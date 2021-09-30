@@ -2,7 +2,7 @@ package com.example.JwtToken.config;
 
 import com.example.JwtToken.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,11 +18,11 @@ import java.io.IOException;
 
 /** @Author: Santosh Paudel */
 @Component
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-  @Autowired private JwtUserDetailsService jwtUserDetailsService;
-
-  @Autowired private JwtTokenUtil jwtTokenUtil;
+  private final JwtUserDetailsService jwtUserDetailsService;
+  private final JwtTokenUtil jwtTokenUtil;
 
   @Override
   protected void doFilterInternal(
