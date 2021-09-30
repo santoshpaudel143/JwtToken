@@ -11,11 +11,12 @@ import java.util.ArrayList;
 /** @Author: Santosh Paudel */
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    if ("example".equals(username)) {
+    if ("javainuse".equals(username)) {
       return new User(
-          "example",
+          "javainuse",
           "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
           new ArrayList<>());
     } else {

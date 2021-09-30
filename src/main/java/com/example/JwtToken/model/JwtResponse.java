@@ -4,11 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-/** @Author: Santosh Paudel */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class JwtResponse {
+import java.io.Serializable;
 
-  private String jwttoken;
+/** @Author: Santosh Paudel */
+public class JwtResponse implements Serializable {
+  private static final long serialVersionUID = -8091879091924046844L;
+  private final String jwttoken;
+
+  public JwtResponse(String jwttoken) {
+    this.jwttoken = jwttoken;
+  }
+
+  public String getToken() {
+    return this.jwttoken;
+  }
 }

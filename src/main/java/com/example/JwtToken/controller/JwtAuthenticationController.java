@@ -4,29 +4,26 @@ import com.example.JwtToken.config.JwtTokenUtil;
 import com.example.JwtToken.model.JwtRequest;
 import com.example.JwtToken.model.JwtResponse;
 import com.example.JwtToken.service.JwtUserDetailsService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /** @Author: Santosh Paudel */
 @RestController
 @CrossOrigin
-@RequiredArgsConstructor
 public class JwtAuthenticationController {
+  @Autowired private AuthenticationManager authenticationManager;
 
-  private final AuthenticationManager authenticationManager;
-  private final JwtTokenUtil jwtTokenUtil;
-  private final JwtUserDetailsService userDetailsService;
+  @Autowired private JwtTokenUtil jwtTokenUtil;
 
-  @PostMapping("/authenticate")
+  @Autowired private JwtUserDetailsService userDetailsService;
+
+  @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
       throws Exception {
 
