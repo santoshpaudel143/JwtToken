@@ -24,7 +24,6 @@ public class JwtAuthenticationController {
   private final JwtTokenUtil jwtTokenUtil;
   private final JwtUserDetailsService userDetailsService;
 
-  //  @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
   @PostMapping("/token")
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
       throws Exception {

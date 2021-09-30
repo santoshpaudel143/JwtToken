@@ -1,11 +1,7 @@
 package com.example.JwtToken.model;
 
-import java.io.Serializable;
-
 /** @Author: Santosh Paudel */
-public class JwtRequest implements Serializable {
-
-  private static final long serialVersionUID = 5926468583005150707L;
+public class JwtRequest {
 
   private String username;
   private String password;
