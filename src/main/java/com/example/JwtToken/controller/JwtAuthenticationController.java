@@ -1,8 +1,6 @@
 package com.example.JwtToken.controller;
 
-import com.example.JwtToken.config.JwtTokenUtil;
-import com.example.JwtToken.dto.JWTTokenResponseDto;
-import com.example.JwtToken.model.JwtRequest;
+import com.example.JwtToken.dto.JWTTokenRequestDto;
 import com.example.JwtToken.service.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +8,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 /** @Author: Santosh Paudel */
@@ -21,24 +18,14 @@ import org.springframework.web.bind.annotation.*;
 public class JwtAuthenticationController {
 
   private final AuthenticationManager authenticationManager;
-  private final JwtTokenUtil jwtTokenUtil;
   private final JwtUserDetailsService userDetailsService;
 
   @PostMapping("/token")
-  public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest)
-      throws Exception {
+  public ResponseEntity<?> createAuthenticationToken(
+      @RequestBody JWTTokenRequestDto jwtTokenRequestDto) throws Exception {
 
-    authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
-
-    final UserDetails userDetails =
-        userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-    String token = jwtTokenUtil.generateToken(userDetails);
-    JWTTokenResponseDto jwtTokenResponseDto = new JWTTokenResponseDto();
-    jwtTokenResponseDto.setAccess_token(token);
-    jwtTokenResponseDto.setRefresh_token(jwtTokenUtil.generateRefreshToken(userDetails));
-    jwtTokenResponseDto.setExpires_in(jwtTokenUtil.getExpirationDateFromToken(token));
-
-    return ResponseEntity.ok(jwtTokenResponseDto);
+    authenticate(jwtTokenRequestDto.getUsername(), jwtTokenRequestDto.getPassword());
+    return ResponseEntity.ok(userDetailsService.getTokenForUser(jwtTokenRequestDto));
   }
 
   private void authenticate(String username, String password) throws Exception {
