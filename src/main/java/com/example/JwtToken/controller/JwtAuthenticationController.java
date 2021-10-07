@@ -1,8 +1,8 @@
 package com.example.JwtToken.controller;
 
 import com.example.JwtToken.config.JwtTokenUtil;
+import com.example.JwtToken.dto.JWTTokenResponseDto;
 import com.example.JwtToken.model.JwtRequest;
-import com.example.JwtToken.model.JwtResponse;
 import com.example.JwtToken.service.JwtUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,10 +32,13 @@ public class JwtAuthenticationController {
 
     final UserDetails userDetails =
         userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+    String token = jwtTokenUtil.generateToken(userDetails);
+    JWTTokenResponseDto jwtTokenResponseDto = new JWTTokenResponseDto();
+    jwtTokenResponseDto.setAccess_token(token);
+    jwtTokenResponseDto.setRefresh_token(jwtTokenUtil.generateRefreshToken(userDetails));
+    jwtTokenResponseDto.setExpires_in(jwtTokenUtil.getExpirationDateFromToken(token));
 
-    final String token = jwtTokenUtil.generateToken(userDetails);
-
-    return ResponseEntity.ok(new JwtResponse(token));
+    return ResponseEntity.ok(jwtTokenResponseDto);
   }
 
   private void authenticate(String username, String password) throws Exception {
